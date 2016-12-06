@@ -1,0 +1,15 @@
+genematching\Annotation.class
+Experiment\Parse.class
+utils\TCSS_Result.class
+genematching\Example.class
+Experiment\Parse$1.class
+genematching\GOTerm.class
+Experiment\Term.class
+genematching\GOntology.class
+Experiment\GenePair.class
+genematching\TermDomain.class
+genematching\GeneMatching.class
+genematching\Evaluation$2.class
+genematching\Evaluation.class
+genematching\GeneAnnotations.class
+genematching\Evaluation$1.class
