@@ -15,6 +15,7 @@ Description: HVSM is a measure to predict the functional relationship between di
 		mvn assembly:assembly  
 
 ##__API:__  
+	By using HVSM, you can go Example.java for help or do the fllowing steps:
 ###	1. To predict a list of gene pair, first build the ontology from a given ontology path:  
 		GOntology ontology = GOntology.parseFromXml(ontologyPath);  
 ###	2. then build the gene pair list from gene pair file, if your dataset contains positive and negative pairs, you need two pair list:  
