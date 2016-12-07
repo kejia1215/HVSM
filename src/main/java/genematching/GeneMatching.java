@@ -85,7 +85,7 @@ public class GeneMatching {
         Queue<GOTerm> queue = new LinkedList<GOTerm>(related_terms);
         Queue<GOTerm> backup = new LinkedList<GOTerm>();
         double init_value = 1.0;
-        int level = 3;/*
+        int level = 3;
         while (!queue.isEmpty()) {
             if (level <= 0) break;
             GOTerm term = queue.poll();
@@ -105,7 +105,7 @@ public class GeneMatching {
                 init_value /= 2;
                 level--;
             }
-        }*/
+        }
         Queue<GOTerm> child_queue = new LinkedList<GOTerm>();
         child_queue.addAll(intersectChild);
         level = 2;
