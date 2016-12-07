@@ -15,18 +15,18 @@ Description: HVSM is a measure to predict the functional relationship between di
 		mvn assembly:assembly  
 
 ##__API:__  
-	####1. To predict a list of gene pair, first build the ontology from a given ontology path:  
+###	1. To predict a list of gene pair, first build the ontology from a given ontology path:  
 		GOntology ontology = GOntology.parseFromXml(ontologyPath);  
-	####2. then build the gene pair list from gene pair file, if your dataset contains positive and negative pairs, you need two pair list:  
+###	2. then build the gene pair list from gene pair file, if your dataset contains positive and negative pairs, you need two pair list:  
 		this step follow Example#getGenePair(path,splitter)  
-	####3. get annotations based on annotation file:  
+###	3. get annotations based on annotation file:  
 		GeneAnnotations annotations = GeneAnnotations.parseFromFile(assocPath, db, genePairs, ontology);  
 		db is the database name of annotation(such as SGD or UniportKB)  
 		genePairs is the gene wanted, this parameter is to filter out gene which is useless  
 		ontology is instance got from step 1  
-	####4. generate a GeneMatching instance based on ontology and annotations:  
+###	4. generate a GeneMatching instance based on ontology and annotations:  
 		GeneMatching matching = new GeneMatching(ontology, annotations);  
-	####5. calculate the similarity on gene pairs mentioned before:  
+###	5. calculate the similarity on gene pairs mentioned before:  
 		double sim = matching.calCCSimilarity(pair1, pair2);  
 		or  
 		double sim = matching.calBPSimilarity(pair1, pair2);  
