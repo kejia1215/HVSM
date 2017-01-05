@@ -21,12 +21,11 @@ public class GOntology {
     private List<GOTerm> bp_terms;
     private List<GOTerm> mf_terms;
     private Map<String, GOTerm> termMap;
-    private Map<String, List<GOTerm>> obsolsteMap;
+    private int total_annotate = 0;
 
-    public GOntology(List<GOTerm> terms, Map<String, GOTerm> termMap, Map<String, List<GOTerm>> obsolsteMap) {
+    public GOntology(List<GOTerm> terms, Map<String, GOTerm> termMap) {
         this.all_terms = terms;
         this.termMap = termMap;
-        this.obsolsteMap = obsolsteMap;
         cc_terms = new ArrayList<GOTerm>();
         bp_terms = new ArrayList<GOTerm>();
         mf_terms = new ArrayList<GOTerm>();
@@ -53,41 +52,26 @@ public class GOntology {
         }
     }
 
-    public List<GOTerm> getRelatedTerms(String termid) {
-        List<GOTerm> terms = new ArrayList<GOTerm>();
-        GOTerm term = termMap.get(termid);
-        if (term != null) terms.add(term);
-        if (obsolsteMap.containsKey(termid)) {
-            terms.addAll(obsolsteMap.get(termid));
+    public GOTerm getRelatedTerms(String termid) {
+        return termMap.get(termid);
+    }
+
+    public void addAnnotate(String termid){
+        GOTerm annotate_term = termMap.get(termid);
+        if(annotate_term!=null){
+            annotate_term.addGeneAnnotation();
         }
-        return terms;
+    }
+
+    public void setTotalAnnotate(int total){
+        total_annotate = total;
     }
 
     public void calTermWeight() {
         for (GOTerm term : all_terms) {
-            int childs_num = calChildNum(term).size();
-            term.weight = Math.exp(-1.0 * childs_num / all_terms.size());//Math.log(all_terms.size()/childs_num*1.0);
-        }
-    }
-
-    public void calCCTermWeight() {
-        for (GOTerm term : cc_terms) {
-            int childs_num = calChildNum(term).size();
-            term.weight = Math.log(cc_terms.size() / childs_num);
-        }
-    }
-
-    public void calBPTermWeight() {
-        for (GOTerm term : bp_terms) {
-            int childs_num = calChildNum(term).size();
-            term.weight = Math.log(bp_terms.size() / childs_num);
-        }
-    }
-
-    public void calMFTermWeight() {
-        for (GOTerm term : mf_terms) {
-            int childs_num = calChildNum(term).size();
-            term.weight = Math.log(mf_terms.size() / childs_num);
+            term.weight = - Math.log((term.gene_number+1.0)/(total_annotate+1.0));
+//            int childs_num = calChildNum(term).size();
+//            term.weight = Math.exp(-1.0 * childs_num / all_terms.size());//Math.log(all_terms.size()/childs_num*1.0);
         }
     }
 
@@ -107,14 +91,14 @@ public class GOntology {
             throws IOException, ParserConfigurationException, SAXException {
         List<GOTerm> terms = new ArrayList<GOTerm>();
         Map<String, GOTerm> map = new HashMap<String, GOTerm>();
-        Map<String, List<GOTerm>> obsoletes = new HashMap<String, List<GOTerm>>();
+        Set<String> obsoletes = new HashSet<String>();
         Map<String, List<String>> parents = new HashMap<String, List<String>>();
+        Map<String, List<String>> part_of_map = new HashMap<String, List<String>>();
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = db.parse(new File(path));
         NodeList termnodes = doc.getElementsByTagName("term");
         int count = 0;
-        Map<String, List<String>> obosoleteMap = new HashMap<String, List<String>>();
         for (int i = 0; i < termnodes.getLength(); i++) {
             Node node = termnodes.item(i);
             if (!node.getNodeName().equals("term")) continue;
@@ -122,6 +106,8 @@ public class GOntology {
             List<String> alt_id = new ArrayList<String>();
             List<String> consider = new ArrayList<String>();
             List<String> is_a = new ArrayList<String>();
+            List<String> part_of = new ArrayList<String>();
+            List<String> regulates = new ArrayList<String>();
             boolean is_obsolete = false;
             String domain = null;
             String name = null;
@@ -138,12 +124,28 @@ public class GOntology {
                 else if (nodeName.equals("is_obsolete")) is_obsolete = "1".equals(nodeValue);
                 else if (nodeName.equals("consider")) consider.add(nodeValue);
                 else if (nodeName.equals("replaced_by")) consider.add(nodeValue);
+                else if(nodeName.equals("relationship")){
+                    Node iter = child.getFirstChild();
+                    int flag = -1;//-1 denotes nothing,0 denotes part_of,1 denotes regulates,2 denotes others
+                    while(iter!=null){
+                        String part_name = iter.getNodeName();
+                        String part_value = iter.getTextContent();
+                        if(part_name.equals("type")){
+                            if(part_value.equals("part_of"))flag=0;
+                            else if(part_value.equals("regulates")) flag = 1;
+                            else flag=2;
+                        }else if(part_name.equals("to")){
+                            if(flag==0)part_of.add(part_value);
+                            else if(flag==1)regulates.add(part_value);
+                        }
+                        iter = iter.getNextSibling();
+                    }
+                }
             }
             if (is_obsolete) {
-                List<String> obsoleteList = is_a;
-                obsoleteList.addAll(consider);
-                obosoleteMap.put(id, obsoleteList);
-                for (String alt : alt_id) obosoleteMap.put(alt, obsoleteList);
+                obsoletes.add(id);
+                map.put(id,null);
+                for (String alt : alt_id) map.put(alt,null);
             } else {
                 if (domain.equals("cellular_component"))
                     domain = "CC";
@@ -153,29 +155,28 @@ public class GOntology {
                     domain = "MF";
                 GOTerm curTerm = new GOTerm(id, name, TermDomain.valueOf(domain));
                 parents.put(id, is_a);
+                part_of_map.put(id,part_of);
                 terms.add(curTerm);
                 map.put(id, curTerm);
                 for (String alt : alt_id) map.put(alt, curTerm);
             }
         }
-        for (String id : obosoleteMap.keySet()) {
-            List<String> reps = obosoleteMap.get(id);
-            List<GOTerm> obs = new ArrayList<GOTerm>();
-            for (String rep : reps) {
-                GOTerm term = map.get(rep);
-                obs.add(term);
-                obsoletes.put(id, obs);
-            }
-        }
         for (String id : parents.keySet()) {
             List<String> parent = parents.get(id);
+            List<String> part_ofs = part_of_map.get(id);
             GOTerm term = map.get(id);
             for (String pa : parent) {
                 GOTerm paterm = map.get(pa);
                 term.addParent(paterm);
                 paterm.addChild(term);
             }
+            for (String pa : part_ofs) {
+                GOTerm paterm = map.get(pa);
+                if(paterm==null)continue;
+                term.addPartOf(paterm);
+                paterm.addPart(term);
+            }
         }
-        return new GOntology(terms, map, obsoletes);
+        return new GOntology(terms, map);
     }
 }

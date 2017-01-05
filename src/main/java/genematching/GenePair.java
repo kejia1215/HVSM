@@ -32,4 +32,21 @@ public class GenePair {
         this.MF_similarity = 0;
         this.pos = is_pos;
     }
+
+    @Override
+    public String toString() {
+        return id1+"\t"+id2;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        GenePair other = (GenePair)obj;
+        if(id1.equals(other.id1) && id2.equals(other.id2))return true;
+        return id1.equals(other.id2) && id2.equals(other.id1);
+    }
+
+    @Override
+    public int hashCode() {
+        return id1.hashCode() + id2.hashCode();
+    }
 }

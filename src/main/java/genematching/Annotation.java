@@ -31,11 +31,11 @@ public class Annotation {
     }
 
     public void addAnnotate(String id, GOntology ontology) {
-        List<GOTerm> related = ontology.getRelatedTerms(id);
+        GOTerm related = ontology.getRelatedTerms(id);
         if (related != null) {
-            annotates.addAll(related);
+            annotates.add(related);
         } else {
-            System.out.println("Not Found Terms: " + id);
+            System.out.println("Terms: " + id+" was obsoleted.");
         }
     }
 
@@ -45,5 +45,10 @@ public class Annotation {
 
     public String getGeneId() {
         return this.geneId;
+    }
+
+    @Override
+    public String toString() {
+        return geneId;
     }
 }

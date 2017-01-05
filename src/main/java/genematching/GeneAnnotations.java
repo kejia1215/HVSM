@@ -31,8 +31,21 @@ public class GeneAnnotations {
 
     public List<GOTerm> getRelatedTerms(String geneId, TermDomain domain) {
         Annotation annotation = annotationMap.get(geneId);
+        if(annotation==null)return null;
         List<GOTerm> related_terms = new ArrayList<GOTerm>();
         for (GOTerm term : annotation.annotates) {
+            if (term.domain == domain) {
+                related_terms.add(term);
+            }
+        }
+        return related_terms;
+    }
+
+    public List<GOTerm> getRelatedTerms(Set<String> termset, TermDomain domain) {
+        if(termset == null)return null;
+        List<GOTerm> related_terms = new ArrayList<GOTerm>();
+        for (String termid:termset) {
+            GOTerm term = ontology.getRelatedTerms(termid);
             if (term.domain == domain) {
                 related_terms.add(term);
             }
@@ -59,16 +72,19 @@ public class GeneAnnotations {
         int flag = 0;
         List<Annotation> annotations = new ArrayList<Annotation>();
         Map<String, Annotation> annotationMap = new HashMap<String, Annotation>();
+        int total_annotate = 0;
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             String kb = line.split("\t")[0].trim();
             if (!kb.equals(targetDb))
                 continue;
+            total_annotate++;
             String[] values = line.split("\t");
             String gene = values[1].trim();
             String term = values[4].trim();
             String domain = values[8].trim();
             String evidence = values[6].trim();
+            ontology.addAnnotate(term);
             if (filterGene != null && !filterGene.contains(gene))
                 continue;
             Annotation annotation = null;
@@ -80,6 +96,7 @@ public class GeneAnnotations {
             annotation.addAnnotate(term, ontology);
             annotationMap.put(gene, annotation);
         }
+        ontology.setTotalAnnotate(total_annotate);
         return new GeneAnnotations(ontology, annotations, annotationMap);
     }
 }
