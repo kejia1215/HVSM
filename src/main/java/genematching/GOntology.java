@@ -42,6 +42,10 @@ public class GOntology {
         }
     }
 
+    public List<GOTerm> getDataBase(){
+        return all_terms;
+    }
+
     public List<GOTerm> getDataBase(TermDomain domain) {
         if (TermDomain.CC == domain) return cc_terms;
         else if (TermDomain.BP == domain) return bp_terms;
@@ -73,6 +77,17 @@ public class GOntology {
 //            int childs_num = calChildNum(term).size();
 //            term.weight = Math.exp(-1.0 * childs_num / all_terms.size());//Math.log(all_terms.size()/childs_num*1.0);
         }
+    }
+
+    public List<GOTerm> getRelatedTerms(Set<String> termset) {
+        if(termset == null)return null;
+        List<GOTerm> related_terms = new ArrayList<GOTerm>();
+        for (String termid:termset) {
+            GOTerm term = getRelatedTerms(termid);
+            if(term == null)continue;
+            related_terms.add(term);
+        }
+        return related_terms;
     }
 
     private Set<GOTerm> calChildNum(GOTerm term) {

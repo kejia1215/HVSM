@@ -39,22 +39,24 @@ public class GeneMatching {
     public double calCCGeneSimilarity(String gene1, String gene2, double base){
         List<GOTerm> cc_terms = ontology.getDataBase(TermDomain.CC);
         List<GOTerm> related_terms1 = annotations.getRelatedTerms(gene1, TermDomain.CC);
+//        System.out.println(related_terms1);
         List<GOTerm> related_terms2 = annotations.getRelatedTerms(gene2, TermDomain.CC);
-        return calCCSimilarity(cc_terms, related_terms1, related_terms2, base);
+//        System.out.println(related_terms2);
+        return calSimilarity(cc_terms, related_terms1, related_terms2, base);
     }
 
-    public double calCCTermSetSimilarity(Set<String> termset1, Set<String> termset2){
-        return calCCTermSetSimilarity(termset1, termset2, Math.E);
+    public double calTermSetSimilarity(Set<String> termset1, Set<String> termset2){
+        return calTermSetSimilarity(termset1, termset2, Math.E);
     }
 
-    public double calCCTermSetSimilarity(Set<String> termset1, Set<String> termset2, double base){
-        List<GOTerm> cc_terms = ontology.getDataBase(TermDomain.CC);
-        List<GOTerm> related_terms1 = annotations.getRelatedTerms(termset1, TermDomain.CC);
-        List<GOTerm> related_terms2 = annotations.getRelatedTerms(termset2, TermDomain.CC);
-        return calCCSimilarity(cc_terms, related_terms1, related_terms2, base);
+    public double calTermSetSimilarity(Set<String> termset1, Set<String> termset2, double base){
+        List<GOTerm> all_terms = ontology.getDataBase();
+        List<GOTerm> related_terms1 = ontology.getRelatedTerms(termset1);
+        List<GOTerm> related_terms2 = ontology.getRelatedTerms(termset2);
+        return calSimilarity(all_terms, related_terms1, related_terms2, base);
     }
 
-    private double calCCSimilarity(List<GOTerm> cc_terms, List<GOTerm> related_terms1, List<GOTerm> related_terms2, double base) {
+    private double calSimilarity(List<GOTerm> cc_terms, List<GOTerm> related_terms1, List<GOTerm> related_terms2, double base) {
         if(related_terms1==null && related_terms2==null)return -3;
         if(related_terms1==null || related_terms2==null)return -2;
         if(related_terms1.size()==0 && related_terms2.size()==0)return -3;
@@ -77,33 +79,9 @@ public class GeneMatching {
         List<GOTerm> cc_terms = ontology.getDataBase(TermDomain.BP);
         List<GOTerm> related_terms1 = annotations.getRelatedTerms(gene1, TermDomain.BP);
         List<GOTerm> related_terms2 = annotations.getRelatedTerms(gene2, TermDomain.BP);
-        return calBPSimilarity(cc_terms, related_terms1, related_terms2, base);
+        return calSimilarity(cc_terms, related_terms1, related_terms2, base);
     }
 
-    public double calBPTermSetSimilarity(Set<String> termset1, Set<String> termset2){
-        return calBPTermSetSimilarity(termset1, termset2, Math.E);
-    }
-
-    public double calBPTermSetSimilarity(Set<String> termset1, Set<String> termset2, double base){
-        List<GOTerm> cc_terms = ontology.getDataBase(TermDomain.BP);
-        List<GOTerm> related_terms1 = annotations.getRelatedTerms(termset1, TermDomain.BP);
-        List<GOTerm> related_terms2 = annotations.getRelatedTerms(termset2, TermDomain.BP);
-        return calBPSimilarity(cc_terms, related_terms1, related_terms2, base);
-    }
-
-    private double calBPSimilarity(List<GOTerm> cc_terms, List<GOTerm> related_terms1, List<GOTerm> related_terms2, double base) {
-        if(related_terms1==null && related_terms2==null)return -3;
-        if(related_terms1==null || related_terms2==null)return -2;
-        if(related_terms1.size()==0 && related_terms2.size()==0)return -3;
-        if(related_terms1.size()==0 || related_terms2.size()==0)return -2;
-
-        List<GOTerm> child_terms = getIntersectTerm(related_terms1, related_terms2);
-        double[] vector1 = calArcTanVector(cc_terms, related_terms1, child_terms);
-        double[] vector2 = calArcTanVector(cc_terms, related_terms2, child_terms);
-        int all_terms = related_terms1.size() + related_terms2.size();
-        if(all_terms==0)return 1;
-        return Evaluation.cosienSimilarity(vector1, vector2)* Math.log(all_terms)/Math.log(base);
-    }
     public double calMFGeneSimilarity(String gene1, String gene2) {
         return calMFGeneSimilarity(gene1,gene2,Math.E);
     }
@@ -112,127 +90,7 @@ public class GeneMatching {
         List<GOTerm> cc_terms = ontology.getDataBase(TermDomain.MF);
         List<GOTerm> related_terms1 = annotations.getRelatedTerms(gene1, TermDomain.MF);
         List<GOTerm> related_terms2 = annotations.getRelatedTerms(gene2, TermDomain.MF);
-        return calMFSimilarity(cc_terms, related_terms1, related_terms2, base);
-    }
-
-    public double calMFTermSetSimilarity(Set<String> termset1, Set<String> termset2){
-        return calMFTermSetSimilarity(termset1, termset2, Math.E);
-    }
-
-    public double calMFTermSetSimilarity(Set<String> termset1, Set<String> termset2, double base){
-        List<GOTerm> cc_terms = ontology.getDataBase(TermDomain.MF);
-        List<GOTerm> related_terms1 = annotations.getRelatedTerms(termset1, TermDomain.MF);
-        List<GOTerm> related_terms2 = annotations.getRelatedTerms(termset2, TermDomain.MF);
-        return calMFSimilarity(cc_terms, related_terms1, related_terms2, base);
-    }
-
-    private double calMFSimilarity(List<GOTerm> cc_terms, List<GOTerm> related_terms1, List<GOTerm> related_terms2, double base) {
-        if(related_terms1==null && related_terms2==null)return -3;
-        if(related_terms1==null || related_terms2==null)return -2;
-        if(related_terms1.size()==0 && related_terms2.size()==0)return -3;
-        if(related_terms1.size()==0 || related_terms2.size()==0)return -2;
-
-        List<GOTerm> child_terms = getIntersectTerm(related_terms1, related_terms2);
-
-        double[] vector1 = calArcTanVector(cc_terms, related_terms1, child_terms);
-        double[] vector2 = calArcTanVector(cc_terms, related_terms2, child_terms);
-        int all_terms = related_terms1.size() + related_terms2.size();
-        if(all_terms==0)return 1;
-        return Evaluation.cosienSimilarity(vector1, vector2) * Math.log(all_terms)/Math.log(base);
-    }
-
-    private double[] calVector(List<GOTerm> terms, List<GOTerm> related_terms, List<GOTerm> intersectChild) {
-        double[] vector = new double[terms.size()];
-        Map<String, Integer> mapIndex = new HashMap<String, Integer>();
-        for (GOTerm term : terms) {
-            mapIndex.put(term.id, mapIndex.size());
-        }
-        Queue<GOTerm> backup = new LinkedList<GOTerm>();
-        Queue<GOTerm> part_ofs = new LinkedList<GOTerm>();
-        for(GOTerm term:related_terms) {
-            for (GOTerm part_of : term.part_of) {
-                part_ofs.add(part_of);
-            }
-        }
-
-        double init_value = 1.0;
-        int level = 3;
-
-        Queue<GOTerm> queue = new LinkedList<GOTerm>(related_terms);
-        double[] increase = {0,init_value/6,init_value/12};
-        while (!queue.isEmpty()) {
-            if (level <= 0) break;
-            GOTerm term = queue.poll();
-            int index = mapIndex.get(term.id);
-            if (withWeight) {
-                vector[index] = term.weight * (vector[index] >0 ? vector[index]+increase[level] : init_value);//Math.max(vector[index], init_value);
-            } else {
-                vector[index] = vector[index] >0 ? vector[index]+increase[level] : init_value;//Math.max(vector[index], init_value);
-            }
-            for (GOTerm parent : term.getParent()) {
-                backup.add(parent);
-            }
-            if (queue.isEmpty()) {
-                Queue<GOTerm> temp = queue;
-                queue = backup;
-                backup = temp;
-                init_value /= 2;
-                level--;
-            }
-        }
-        Queue<GOTerm> child_queue = new LinkedList<GOTerm>();
-        child_queue.addAll(intersectChild);
-        level = 2;
-        init_value = 0.0;
-        increase[1] = init_value/6;
-        increase[2] = init_value/12;
-        backup.clear();
-        while (!child_queue.isEmpty()) {
-            if (level <= 0) break;
-            GOTerm term = child_queue.poll();
-            int index = mapIndex.get(term.id);
-            if (withWeight) {
-                vector[index] = term.weight * (vector[index] > 0 ? vector[index] + increase[level] : init_value);//Math.max(vector[index], init_value);
-            } else {
-                vector[index] = vector[index] > 0 ? vector[index] + increase[level] : init_value;//Math.max(vector[index], init_value);
-            }
-            for (GOTerm parent : term.getChildren()) {
-                backup.add(parent);
-            }
-            if (child_queue.isEmpty()) {
-                Queue<GOTerm> temp = child_queue;
-                child_queue = backup;
-                backup = temp;
-                init_value /= 2;
-                level--;
-            }
-        }
-
-        init_value = 0.3;
-        level = 2;
-        double[] partof_increase = {0,0.1,0.05};
-        backup.clear();
-        while (!part_ofs.isEmpty()) {
-            if (level <= 0) break;
-            GOTerm term = part_ofs.poll();
-            int index = mapIndex.get(term.id);
-            if (withWeight) {
-                vector[index] = term.weight * (vector[index] >0 ? vector[index]+partof_increase[level] : init_value);//Math.max(vector[index], init_value);
-            } else {
-                vector[index] = vector[index] >0 ? vector[index]+partof_increase[level] : init_value;//Math.max(vector[index], init_value);
-            }
-            for (GOTerm part_of : term.part_of) {
-                backup.add(part_of);
-            }
-            if (part_ofs.isEmpty()) {
-                Queue<GOTerm> temp = part_ofs;
-                part_ofs = backup;
-                backup = temp;
-                init_value /= 2;
-                level--;
-            }
-        }
-        return vector;
+        return calSimilarity(cc_terms, related_terms1, related_terms2, base);
     }
 
     private double[] calArcTanVector(List<GOTerm> terms, List<GOTerm> related_terms, List<GOTerm> intersectChild) {

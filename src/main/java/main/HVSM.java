@@ -31,9 +31,7 @@ public class HVSM {
 
     public static void RunTermSet(Main.Orgonism org, Main.DB db, InputStream is, OutputStream os) throws Exception {
         GOntology ontology = GOntology.parseFromXml(properties.getProperty("GO"));
-        GeneAnnotations annotations = GeneAnnotations.parseFromFile(properties.getProperty("Annotation"), org.name,
-                null, ontology);
-        GeneMatching matching = new GeneMatching(ontology, annotations);
+        GeneMatching matching = new GeneMatching(ontology, null);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
         String line = null;
         while((line = reader.readLine())!=null){
@@ -47,12 +45,7 @@ public class HVSM {
             for(String termid: splits[1].split(",")) {
                 termset2.add(termid);
             }
-            double similarity;
-            switch (db){
-                case CC: similarity = matching.calCCTermSetSimilarity(termset1, termset2);break;
-                case BP: similarity = matching.calBPTermSetSimilarity(termset1, termset2);break;
-                default: similarity = matching.calMFTermSetSimilarity(termset1, termset2);
-            }
+            double similarity = matching.calTermSetSimilarity(termset1, termset2);
             os.write((similarity + "\n").getBytes());
             os.flush();
         }
@@ -61,8 +54,8 @@ public class HVSM {
     }
 
     public static void RunGenePair(Main.Orgonism org, Main.DB db, InputStream is, OutputStream os) throws Exception {
-        GOntology ontology = GOntology.parseFromXml("gene_ontology.obo");
-        GeneAnnotations annotations = GeneAnnotations.parseFromFile("gene_association.sgd", org.name,
+        GOntology ontology = GOntology.parseFromXml(properties.getProperty("GO"));
+        GeneAnnotations annotations = GeneAnnotations.parseFromFile(properties.getProperty("Annotation"), org.name,
                 null, ontology);
         GeneMatching matching = new GeneMatching(ontology, annotations);
         BufferedReader reader = new BufferedReader(new InputStreamReader(is, "utf-8"));

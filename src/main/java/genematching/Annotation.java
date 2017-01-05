@@ -34,8 +34,6 @@ public class Annotation {
         GOTerm related = ontology.getRelatedTerms(id);
         if (related != null) {
             annotates.add(related);
-        } else {
-            System.out.println("Terms: " + id+" was obsoleted.");
         }
     }
 

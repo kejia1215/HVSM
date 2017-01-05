@@ -14,7 +14,7 @@ public class Main {
         CC,BP,MF
     }
     public static enum Orgonism{
-        HUMAN("SGD"), YEAST("UniportKB");
+        HUMAN("UniProtKB"), YEAST("SGD");
         public String name;
         private Orgonism(String name){
             this.name = name;
@@ -26,13 +26,13 @@ public class Main {
     private static OutputStream os;
     static{
         opts.addOption("h", false, "Print help information");
-        opts.addOption("org", true, "Human or yeast, orgonism of datasets.");
+        opts.addOption("org", true, "human or yeast, orgonism of datasets.");
         opts.addOption("db", true, "C, P or F, denotes the Database of GO");
         opts.addOption("termset", false, "Choose TermSet to calculate the similarity.");
         opts.addOption("gene", false, "Choose Gene Pair to calculate the similarity.");
         opts.addOption("i", true, "The input file of termset or gene pair, split with \"tab\"."
         + "input termset need split with \",\", eg: a,b,c\t d,e,f");
-        opts.addOption("o", true, "The output file of similarity.");
+        opts.addOption("o", true, "The output file of similarity, if not specified, result will output to console。");
     }
     public static void printHelp(){
         HelpFormatter hf = new HelpFormatter();
@@ -45,11 +45,13 @@ public class Main {
                 printHelp();
             } else {
                 org = parseOrgonism(cli.getOptionValue("org"));
-                db = parseDataBase(cli.getOptionValue("db"));
                 is = parseInputStream(cli.getOptionValue("i"));
                 os = parseOutPutStream(cli.getOptionValue("o"));
                 if(cli.hasOption("termset"))HVSM.RunTermSet(org,db,is,os);
-                else if(cli.hasOption("gene"))HVSM.RunGenePair(org,db,is,os);
+                else if(cli.hasOption("gene")){
+                    db = parseDataBase(cli.getOptionValue("db"));
+                    HVSM.RunGenePair(org,db,is,os);
+                }
                 else System.err.println("Error Method Found, Use termset or gene.");
                 is.close();
                 os.flush();

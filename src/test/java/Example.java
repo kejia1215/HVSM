@@ -47,7 +47,7 @@ public class Example {
 //        predictBinaryData(newxmlPath, hrssYPosPath, hrssYNegPath, yeastAssocPath, "c", "SGD");
 
         //未删除数据，用之前删除后缀，逗号分隔符
-//        predictBinaryData(newxmlPath, geneHPosPath, geneHNegPath, humanAssocPath, "f","UniProtKB");
+        predictBinaryData(newxmlPath, geneHPosPath, geneHNegPath, humanAssocPath, "c","UniProtKB");
 //        predictBinaryData(newxmlPath, geneYPosPath, geneYNegPath, yeastAssocPath, "f","SGD");
         //删除无ID数据，后缀加intelgo，tab分隔符
 //        predictBinaryData(newxmlPath, HPosPath, HNegPath, humanAssocPath, "f","UniProtKB");

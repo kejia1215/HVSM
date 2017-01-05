@@ -41,18 +41,6 @@ public class GeneAnnotations {
         return related_terms;
     }
 
-    public List<GOTerm> getRelatedTerms(Set<String> termset, TermDomain domain) {
-        if(termset == null)return null;
-        List<GOTerm> related_terms = new ArrayList<GOTerm>();
-        for (String termid:termset) {
-            GOTerm term = ontology.getRelatedTerms(termid);
-            if (term.domain == domain) {
-                related_terms.add(term);
-            }
-        }
-        return related_terms;
-    }
-
     public static GeneAnnotations parseFromFile(String path, String targetDb, GOntology ontology)
             throws IOException {
         return parseFromFile(path, targetDb, null, ontology);
