@@ -1,4 +1,4 @@
-******************** READ ME File*******************************
+# ******************** READ ME File*******************************
 Name: HVSM
 VERSION: 1.0
 This explains how to use the HVSM package. This package could calculate the gene or term similarity on yeast and human with cc, bp or mf category in Gene Ontology. If you hava any problems with how to use it, send an email to KeJia:
@@ -10,15 +10,15 @@ Requirements
 This package requires Windows 7 with JRE 1.8 or JDK 1.8 installed.
 *****************************************************************
 
-How to use?
+## How to use?
 you got three files: 
 
 data: data source used
 HVSM.jar: HVSM runnable file
 
-Step 1  enter "cd XXX\" in command prompt. XXX is where you save the three files. For example, if you saved the files at "c:\HVSM\", just enter "cd c:\HVSM\"
+### Step 1  enter "cd XXX\" in command prompt. XXX is where you save the three files. For example, if you saved the files at "c:\HVSM\", just enter "cd c:\HVSM\"
 
-Step 2 call HVSM package. The command is 
+### Step 2 call HVSM package. The command is 
 java -jar HVSM.jar -org [orgonism] -db [GO category] [-gene] [-termset] -i [input] -o [output]
 
  -db <arg>    C, P or F, denotes the Database of GO, only in gene pair matching mode.
