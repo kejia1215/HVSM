@@ -21,46 +21,47 @@ HVSM.ini: HVSM configuration file<br>
 ### Step 1  enter "cd XXX\" in command prompt. XXX is where you save the three files. For example, if you saved the files at "c:\HVSM\", just enter "cd c:\HVSM\"
 
 ### Step 2 call HVSM package. The command is 
-java -jar HVSM.jar -org [orgonism] -db [GO category] [-gene] [-termset] -i [input] -o [output]
+java -jar HVSM.jar -org [orgonism] -db [GO category] [-gene] [-termset] -i [input] -o [output]<br>
 
- -db <arg>    C, P or F, denotes the Database of GO, only in gene pair matching mode.
- -gene        Choose Gene Pair to calculate the similarity.
- -h           Print help information
- -i <arg>     The input file of termset or gene pair, split with
-              "tab".input termset need split with ",", eg: a,b,c
-              d,e,f
- -o <arg>     The output file of similarity, if not specified, result will output to console.
- -org <arg>   human or yeast, orgonism of datasets.
- -termset     Choose TermSet to calculate the similarity.
+ -db <arg>    C, P or F, denotes the Database of GO, only in gene pair matching mode.<br>
+ -gene        Choose Gene Pair to calculate the similarity.<br>
+ -h           Print help information<br>
+ -i <arg>     The input file of termset or gene pair, split with<br>
+              "tab".input termset need split with ",", eg: a,b,c<br>
+              d,e,f<br>
+ -o <arg>     The output file of similarity, if not specified, result will output to console.<br>
+ -org <arg>   human or yeast, orgonism of datasets.<br>
+ -termset     Choose TermSet to calculate the similarity.<br>
 
-For example,
-Calculte the similarity between termset from input
-java -jar HVSM.jar -org human -termset -i data\termset_example.txt
-output will be like this:
-0.0
-0.1831020481113516
-1.2060201638430177
-0.15344968111913673
-0.0
-0.7506287674848676
-0.3337400599575926
-0.1534608211421122
-0.12242461565800263
-0.49067429375098043
-it corresponding to termsets put in the input file, one termset pair one line.
-
-Calculte the similarity between gene  pair from input file, and output to an specified file.
-java -jar HVSM.jar -org human -db C -gene -i data\gene_example.txt -o output.txt
-output will be like this:
-0.0
-0.1831020481113516
-1.2060201638430177
-0.15344968111913673
-0.0
-0.7506287674848676
-0.3337400599575926
-0.1534608211421122
-0.12242461565800263
-0.49067429375098043
-0.1899425373921889
-it corresponding to gene pairs put in the input file, one gene pair one line.
+For example,<br>
+Calculte the similarity between termset from input<br>
+java -jar HVSM.jar -org human -termset -i data\termset_example.txt<br>
+output will be like this:<br>
+0.0<br>
+0.1831020481113516<br>
+1.2060201638430177<br>
+0.15344968111913673<br>
+0.0<br>
+0.7506287674848676<br>
+0.3337400599575926<br>
+0.1534608211421122<br>
+0.12242461565800263<br>
+0.49067429375098043<br>
+it corresponding to termsets put in the input file, one termset pair one line.<br>
+<br>
+Calculte the similarity between gene  pair from input file, and output to an specified file.<br>
+java -jar HVSM.jar -org human -db C -gene -i data\gene_example.txt -o output.txt<br>
+output will be like this:<br>
+0.0<br>
+0.1831020481113516<br>
+1.2060201638430177<br>
+0.15344968111913673<br>
+0.0<br>
+0.7506287674848676<br>
+0.3337400599575926<br>
+0.1534608211421122<br>
+0.12242461565800263<br>
+0.49067429375098043<br>
+0.1899425373921889<br>
+it corresponding to gene pairs put in the input file, one gene pair one line.<br>
+<br>
