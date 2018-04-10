@@ -1,10 +1,10 @@
 This is a description of our PPI datasets.
 
  In the directory of 'ppi',there are two sub directorys namely 'human_data' and 
-'yeast_data'. In each sub directory, there are two datasets,one is complete PPI
-dataset and the other is partial dataset.The partial dataset is in the 'deleted_data' directory.
+'yeast_data'. In each sub directory, there are two directorys,one is 'complete_data'
+ and the other 'deleted_data'.
 
-The complete PPIs dataset is provided in Jain et al.[23].
+The complete PPIs datasets are provided in Jain et al.[23].
 
-The partial PPIs dataset removes the potentially problematic gene data.
+The partial PPIs datasets remove the potentially problematic gene data.
 
