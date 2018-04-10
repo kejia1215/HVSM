@@ -4,7 +4,7 @@ This is a description of our PPI datasets.
 'yeast_data'. In each sub directory, there are two datasets,one is complete PPI
 dataset and the other is partial dataset.The partial dataset is in the 'deleted_data' directory.
 
-The complete PPIs dataset is provided in [23].
+The complete PPIs dataset is provided in Jain et al.[23].
 
 The partial PPIs dataset removes the potentially problematic gene data.
 
