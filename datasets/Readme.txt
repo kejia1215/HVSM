@@ -1,9 +1,9 @@
 This is a description of our PPI datasets.
 
-In the directory of 'ppi',there are two sub directorys namely 'human_data' and 'yeast_data'. In each 
-sub directory, there are two directorys,one is 'complete_data'and the other is'deleted_data'.
+The 'human_data' contains Homo sapiens PPI dataset. The 'yeast_data' contains Saccharomyces cerevisiae PPI dataset.In each 
+directory, there are two directorys. One is 'complete_data'and the other is'deleted_data'.
 
-The complete PPIs datasets are provided in Jain et al.[23].
+The complete PPI datasets are provided by Jain et al.[23].
 
-The partial PPIs datasets remove the potentially problematic gene data.
+The deleted PPI datasets are partial PPI datasets which remove the potentially problematic gene data for IntelliGO.
 
